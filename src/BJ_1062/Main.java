@@ -48,13 +48,16 @@ class Solution {
     public int cntAvailableWords(Set<String> alphaSet){
         int ans = 0;
         for(int i = 0; i < N; i++){
-            if(words[i].length == 0){ans++;}
+            if(words[i][0] == ""){ans++;}
+            int flag = 0;
             for(int j = 0; j < words[i].length; j++){
-                if(alphaSet.contains(words[i][j])){
-                    ans++;
+                if(!alphaSet.contains(words[i][j])){
+                    flag = 1;
                     break;
                 }
-                j++;
+            }
+            if(flag == 0){
+                ans++;
             }
         }
         return ans;
@@ -69,12 +72,12 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-        for(int i = 0; i < N; i++){
+        for (int i = 0; i < N; i++) {
             String str = br.readLine();
-            str = str.substring(4, str.length()-4);
+            str = str.substring(4, str.length() - 4);
             words[i] = str.split("");
         }
-        if(K < 5){
+        if (K < 5) {
             System.out.println(0);
             return;
         }
