@@ -28,7 +28,7 @@ public class Main {
                 partyCheck.get(m).add(i);
             }
             partyList.add(party);
-        }
+        }   
         Solution solution = new Solution(partyCheck, partyList, knownList);
         answer = solution.sol(N);
         System.out.println(answer);
