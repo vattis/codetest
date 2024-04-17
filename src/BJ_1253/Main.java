@@ -33,6 +33,48 @@ class Solution{
     public int solution(){
         int ans = 0;
         for(int i = 0; i < N; i++){
+            if(findCombine(arr[i], i)){
+                ans++;
+            }
+        }
+        return ans;
+    }
+    public boolean findCombine(int goal, int curIndex){
+        int start = 0;
+        int end = N-1;
+        while(start < end){
+            int num = arr[start]+arr[end];
+            if(goal < num){
+                end--;
+            }
+            else if(goal > num){
+                start++;
+            }
+            else{
+                if(start != curIndex && end != curIndex){
+                    return true;
+                }
+                else if(start == curIndex){
+                    start++;
+                }
+                else if(end == curIndex){
+                    end--;
+                }
+            }
+        }
+        return false;
+    }
+    /*
+    int[] arr;
+    int N;
+
+    public Solution(int[] arr_, int N_){
+        arr = arr_;
+        N = N_;
+    }
+    public int solution(){
+        int ans = 0;
+        for(int i = 0; i < N; i++){
             int num = arr[i];
             if(findCombine(i, num)){
                 ans++;
@@ -40,6 +82,7 @@ class Solution{
         }
         return ans;
     }
+
     public boolean findCombine(int index, int num){
         for(int i = 0; i < N; i++){
             for(int j = i+1; j < N; j++){
@@ -53,37 +96,6 @@ class Solution{
         }
         return false;
     }
-    public int booleanSearch(int goal, int curIndex, int[] arr){
-        int start = 0;
-        int end = N-1;
-        while(start<=end){
-            int current = (start+end)/2;
-            if(arr[current]<goal){
-                start = current;
-                current = (start+end)/2;
-            }
-            else if(arr[current]>goal){
-                end = current;
-                current = (start+end)/2;
-            }
-            else if(arr[current] == goal){
-                if(current == curIndex){
-                    if(arr[current-1] == goal){
-                        return current-1;
-                    }
-                    else if(current+1 < N && arr[current+1] == goal){
-                        return current+1;
-                    }
-                    else{
-                        return -1;
-                    }
-                }
-                else{
-                    return current;
-                }
-            }
-        }
-        return -1;
-    }
+    */
 }
 
