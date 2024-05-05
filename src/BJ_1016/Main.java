@@ -1,5 +1,6 @@
 package BJ_1016;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Main {
         max = sc.nextLong();
         Arrays.fill(odds, true);
         Arrays.fill(ansList, true);
-        for(int i = 2; i <= NUM; i++){
+        for(int i = 2; i <= NUM; i++){ //에라토스테네스의 체
             if(odds[i]){
                 int j = 2;
                 while(i*j <= NUM){
@@ -38,15 +39,24 @@ public class Main {
                 oddList.add(i);
             }
         }
+
         for(long odd: oddList){
+            long start = min-(min%(odd*odd));
+            if(start == min){
+                ansList[0] = false;
+            }
             int t = 1;
-            if(odd*odd)
+            while(start+t*(odd*odd) <= max){
+                ansList[(int)(start+t*(odd*odd)-min)] = false;
+                t++;
+            }
         }
         for(int i = 0; i <= max-min; i++){
             if(ansList[i]){
                 ans++;
             }
         }
+
         System.out.println(ans);
     }
 }
