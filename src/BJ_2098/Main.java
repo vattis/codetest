@@ -4,12 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
-
+import static java.lang.Math.min;
 import static java.lang.Math.pow;
-
+//애초에 시작이 0부터였음;;
+//DP 유형이 많이 부족하다고 느낌
+//비트마스크는 할 만 한듯?
+//N이 작을 때 사용하면 효과적
 class Solution {
     private final int LARGENUM = 100000000;
     int N, T;
@@ -23,35 +24,48 @@ class Solution {
         T = (int)pow(2, N);
         Arrays.fill(visited, false);
         for(int i = 0; i < 65536; i++){
-            Arrays.fill(DP[i], LARGENUM);
+            Arrays.fill(DP[i], -1);
         }
     }
     public int solution(){
+        int ans = LARGENUM;
+        /*
         for(int i = 0; i < N; i++){
             visited[i] = true;
-            recur(1<<i, i, 0);
+            int num = tsp(i, 1<<i, i);
+            if(num < ans ){
+                ans = num;
+            }
             visited[i] = false;
         }
-        return ans;
+        */
+
+        return tsp(0, 1, 0);
     }
-    public void recur(int bit, int curNode, int curCost){
-        System.out.println(curNode);
-        if(bit == T-1){
-            for(int i = 0; i < N; i++){
-                if(curCost < ans){
-                    ans = curCost;
-                    System.out.println(ans + "|" + curNode);
-                }
+    public int tsp(int start, int bits, int curNode){
+        if(bits == (1<<N)-1){
+            if(W[curNode][start] > 0){
+                return W[curNode][start];
             }
+            return LARGENUM;
         }
+
+        if(DP[bits][curNode] > 0){
+            return DP[bits][curNode];
+        }
+        DP[bits][curNode] = LARGENUM;
+
         for(int i = 0; i < N; i++){
-            if(!visited[i] && W[curNode][i] != 0 && DP[bit|(1<<i)][i] >= curCost+W[curNode][i]){
-                DP[bit|(1<<i)][i] = curCost+W[curNode][i];
+            if(isValid(curNode, i)){
                 visited[i] = true;
-                recur(bit|(1<<i), i, curCost+W[curNode][i]);
+                DP[bits][curNode] =  min(DP[bits][curNode], tsp(start, bits|(1<<i), i) + W[curNode][i]);
                 visited[i] = false;
             }
         }
+        return DP[bits][curNode];
+    }
+    public boolean isValid(int curNode, int dest){
+        return !visited[dest] && W[curNode][dest] > 0;
     }
 }
 
@@ -73,7 +87,7 @@ public class Main {
             }
         }
         Solution solution = new Solution(N, W);
-        solution.solution();
-        System.out.println(solution.ans);
+        System.out.println(solution.solution());
     }
 }
+
