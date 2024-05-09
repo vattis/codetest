@@ -12,32 +12,29 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int T, N, K, target;
-        ArrayList<Integer> craftTime = new ArrayList<>();
-        ArrayList<Integer>[] craftGraph;
+
         T = Integer.parseInt(br.readLine());  // T입력
 
         for (int t = 0; t < T; t++) {
-            craftTime = new ArrayList<>();
-            craftGraph = new ArrayList[1001];
-            craftTime.add(0);
+            int[] craftTime = new int[1001];
+            boolean[][] craftGraph = new boolean[1001][];
             for (int i = 0; i <= 1000; i++) {
-                craftGraph[i] = new ArrayList<>();
+                craftGraph[i] = new boolean[1001];
             }
             StringTokenizer st = new StringTokenizer(br.readLine());  //  N, K 입력
             N = Integer.parseInt(st.nextToken());
             K = Integer.parseInt(st.nextToken());
             st = new StringTokenizer(br.readLine()); //건물당 건설 시간
+            int k = 0;
             while (st.hasMoreTokens()) {
-                int e = Integer.parseInt(st.nextToken());
-                craftTime.add(e);
+                craftTime[k] = Integer.parseInt(st.nextToken());
+                k++;
             }
             for (int i = 0; i < K; i++) {  //건물 건설 조건 입력
                 st = new StringTokenizer(new StringBuilder(br.readLine()).reverse().toString());
-                int b = Integer.parseInt(st.nextToken());
-                while (st.hasMoreTokens()) {
-                    int e = Integer.parseInt(st.nextToken());
-                    craftGraph[b].add(e);
-                }
+                int X = Integer.parseInt(st.nextToken());
+                int Y = Integer.parseInt(st.nextToken());
+                craftGraph[Y][X] = true;
             }
             target = Integer.parseInt(br.readLine()); //목표 건물 입력
 
