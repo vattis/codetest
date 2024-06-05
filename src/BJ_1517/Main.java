@@ -9,44 +9,63 @@ import java.util.StringTokenizer;
 public class Main {
     public static void main(String[] ars) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+        int N = Integer.parseInt(br.readLine());
+        long[] arr = new long[N];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for(int i=0; i<N; i++) {
+            arr[i] = Long.parseLong(st.nextToken());
+        }
+        Solution solution = new Solution(N, arr);
+        solution.divFunc(0, N-1);
+        System.out.println(Solution.answer);
     }
 }
 class Solution{
-    static int answer = 0;
-    public void devFunc(long[] arr, int N){
-        if(N == 1){
-            return arr;
+    static long answer = 0;
+    static long[] sorted;
+
+    static long[] arr;
+    public Solution(int N, long[] arr_){
+        sorted = new long[N];
+        arr = arr_;
+    }
+
+    public void divFunc(int left, int right){
+        if(left < right){
+            int mid = (right+left)/2;
+            divFunc(left, mid);
+            divFunc(mid+1, right);
+            mergeFunc(left, right, mid);
         }
     }
-    public long[] mergeFunc(long[] arr1, long[] arr2){
-        int i = 0, j = 0, t = 0;
-        long[] ans = new long[arr1.length + arr2.length];
-        while(i < arr1.length && j < arr2.length){
-            if(arr1[i] < arr2[j]){
-                ans[t] = arr1[i];
+    public void mergeFunc(int left, int right, int mid){
+        int i = left, j = mid+1, t = left;
+        while(i <= mid && j <= right){
+            if(arr[i] <= arr[j]){
+                sorted[t] = arr[i];
                 i++;
             }
             else{
-                ans[t] = arr2[j];
+                sorted[t] = arr[j];
                 j++;
-                answer += arr2.length-i;
+                answer += (mid-i+1);
             }
             t++;
         }
-        if(i < arr1.length){
-            for(; i < arr1.length; i++){
-                ans[t] = arr1[i];
-                t++;
-            }
+        while(i <= mid) {
+            sorted[t] = arr[i];
+            i++;
+            t++;
         }
-        else if(j < arr2.length){
-            for(; j < arr2.length; j++){
-                ans[t] = arr1[j];
-                t++;
-            }
+
+        while(j <= right) {
+            sorted[t] = arr[j];
+            j++;
+            t++;
         }
-        return ans;
+        for(int m=left; m<right+1; m++) {
+            arr[m] = sorted[m];
+        }
     }
 }
 
