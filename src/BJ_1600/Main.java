@@ -30,12 +30,47 @@ class Solution {
             }
         }
     }
-    public int solution(int x, int y, int moveCount, int cur){
-        if(x == W-1 && y == H-1){
-            if(cur < DP[y][x][moveCount])
-            DP[y][x][moveCount] = cur;
+    public int solution(){
+        recur(0, 0, 0, 0);
+        int min = 1000000000;
+        for(int i = 0; i < K; i++){
+            if(DP[W-1][H-1][i] < min){
+                min = DP[W-1][H-1][i];
+            }
         }
-        return 1;
+        return min;
+    }
+    public void recur(int x, int y, int moveCount, int cur){
+        int x_, y_;
+        if(cur < DP[y][x][moveCount]){
+            DP[y][x][moveCount] = cur;
+        }else{
+            return;
+        }
+        if(x == W-1 && y == H-1){
+            return;
+        }
+        if(moveCount < K){
+            for(int i = 0; i < 8; i++){
+                x_ = x + horseMoveX[i];
+                y_ = y + horseMoveY[i];
+                if(0 <= x_ && x_ <= W-1 && 0 <= y_ && y_ <= H-1){
+                    if(arr[y_][x_] == 0){
+                        recur(x_, y_, moveCount+1, cur+1);
+                    }
+                }
+            }
+        }
+        for(int i = 0; i < 4; i++){
+            x_ = x + monkeyMoveX[i];
+            y_ = y + monkeyMoveY[i];
+            if(0 <= x_ && x_ <= W-1 && 0 <= y_ && y_ <= H-1) {
+                if (arr[y_][x_] == 0) {
+                    recur(x_, y_, moveCount, cur + 1);
+                }
+            }
+        }
+        return;
     }
 }
 
@@ -55,6 +90,8 @@ public class Main {
                 arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
+        Solution solution = new Solution(arr, K, H, W);
+        solution.solution();
     }
 }
 
