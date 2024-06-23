@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
+import static java.lang.Math.max;
+
+//DP 문제를 처음으로 제대로 푼 느낌
+//중요한건 DP를 입력하고 나서 어지간하면 바뀌지 않는 방향으로 DP를 설정해야한다는 것
+//처음엔 단순히 팬더가 시작 노드부터 현재 노드까지 지나온 길을 DP 값으로 설정했지만,
+//DP=recur()로 설정해서 팬더가 현재 노드에서 갈 수 있는 최댓값을 DP 값으로 설정함
 
 public class Main {
     public static void main(String[] ars) throws IOException {
@@ -13,8 +19,8 @@ public class Main {
     }
     public static class Solution {
         int n, ans;
-        int[][] arr = new int[500][500];
-        int[][] DP = new int[500][500];
+        int[][] arr = new int[504][504];
+        int[][] DP = new int[504][504];
         final int[] moveX = {0, 0, -1, 1};
         final int[] moveY = {-1, 1, 0, 0};
         public Solution() throws IOException {
@@ -26,40 +32,50 @@ public class Main {
                 for(int j = 0; j < n; j++){
                     arr[i][j] = Integer.parseInt(st.nextToken());
                 }
-                Arrays.fill(DP[i], 1);
+                Arrays.fill(DP[i], -1);
             }
         }
-        public void recur(int x, int y, int count){
+        public int recur(int x, int y){
+            if(DP[y][x] != -1){
+                return DP[y][x];
+            }
+            DP[y][x] = 1;
+            int curX, curY;
+            int max = 0;
+            for(int i = 0; i < 4; i++){
+                curX = x + moveX[i];
+                curY = y + moveY[i];
+                if(curX<0 || curY<0 || curX>=n || curY>=n){
+                    continue;
+                }
+                if(arr[curY][curX]>arr[y][x]){
+                    DP[y][x] = max(DP[y][x], recur(curX, curY)+1);
+                }
+            }
+            return DP[y][x];
+        }
+        public int solution(){
+            int ans = -1;
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++){
+                    ans = max(ans, recur(j, i));
+                }
+            }
+            return ans;
+        }
+        public boolean isMin(int x, int y){
             int curX, curY;
             for(int i = 0; i < 4; i++){
                 curX = x + moveX[i];
                 curY = y + moveY[i];
-                if(curX<0 || curY<0 || curX>=n || curY>=n || DP[curY][curX] > count || arr[curY][curX]>=arr[y][x]){
+                if(curX<0 || curY<0 || curX>=n || curY>=n){
                     continue;
                 }
-                DP[curY][curX] = count+1;
-
-                recur(curX, curY, count+1);
-            }
-        }
-        public int solution(){
-            for(int i = 0; i < n; i++){
-                for(int j = 0; j < n; j++){
-                    if(DP[j][i] == 1){
-                        if()
-                        recur(j, i, 1);
-                    }
+                if(arr[y][x] >= arr[curY][curX]){
+                    return false;
                 }
             }
-            int ans = -2;
-            for(int i = 0; i < n; i++){
-                for(int j = 0; j < n; j++){
-                    if(ans < DP[i][j]){
-                        ans = DP[i][j];
-                    }
-                }
-            }
-            return ans;
+            return true;
         }
     }
 }
