@@ -3,82 +3,97 @@ package BJ_1194;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 class Solution {
-    int N, K;
-    String[][] words;
-    String[] alpha = new String[26];
-    Set<String> alphaSet = new HashSet<>();
-    public Solution(String[][] words_, int n, int k){
-        words = words_;
-        for(int i = 0; i<26; i++){
-            alpha[i] = (char)('a'+i)+"";
-        }
-        N = n;
-        K = k;
-        alphaSet.add("a");
-        alphaSet.add("c");
-        alphaSet.add("i");
-        alphaSet.add("n");
-        alphaSet.add("t");
-    }
-    public int recur(int start, int cnt){
-        int MAX = -1;
-        if(cnt < K){
-            for(int i = start; i < 26; i++){
-                if(!alphaSet.contains(alpha[i])){
-                    alphaSet.add(alpha[i]);
-                    int t = recur(i+1, cnt+1);
-                    if(MAX <  t){MAX = t;}
-                    alphaSet.remove(alpha[i]);
-                }
-            }
-        }
-        else if(cnt == K){
-            return cntAvailableWords(alphaSet);
-        }
-        return MAX;
-    }
-    public int cntAvailableWords(Set<String> alphaSet){
-        int ans = 0;
+    int[] moveX = {0, 1, 0, -1};
+    int[] moveY = {-1, 0, 1, 0};
+    char[][] map = new char[51][51];
+    boolean[][][] visited = new boolean[51][51][64];
+    Queue<Node> queue= new LinkedList<>();
+    int M, N;
+
+    public Solution() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
         for(int i = 0; i < N; i++){
-            if(words[i][0] == ""){ans++;}
-            int flag = 0;
-            for(int j = 0; j < words[i].length; j++){
-                if(!alphaSet.contains(words[i][j])){
-                    flag = 1;
-                    break;
-                }
-            }
-            if(flag == 0){
-                ans++;
+            String str = br.readLine();
+            for(int j = 0; j < M; j++){
+                map[i][j] = str.charAt(j);
             }
         }
-        return ans;
+        for(int i = 0; i < 51; i++){
+            for(int j = 0; j < 51; j++){
+                Arrays.fill(visited[i][j], false);
+                if(map[i][j] == '0'){
+                    queue.add(new Node(j, i, 0, 0));
+                }
+            }
+        }
     }
+    public int solution(){
+        int min = 100000000;
+        while(!queue.isEmpty()){
+            Node node = queue.poll();
+            int curX;
+            int curY;
+            for(int i = 0; i < 4; i++){
+                curX = node.x + moveX[i];
+                curY = node.y + moveY[i];
+                Node curNode = new Node(curX, curY, node.count+1, node.state);
+                if(isInBoundary(curX, curY) && !visited[curY][curX][node.state]){
+                    if('A' <= map[curY][curX] && map[curY][curX] <= 'F'){ //문을 만났을 때
+                        if(hasKey(node.state, map[curY][curX])){ //키를 갖고 있으면
+                            visited[curY][curX][node.state] = true;
+                        }
+                    }
+                    else if('a' <= map[curY][curX] && map[curY][curX] <= 'f'){ //열쇄를 만났을 때
+                        char t = (char)(map[curY][curX]-'a');
+                        curNode.state = (curNode.state|1<<t);
+                        visited[curY][curX][node.state] = true;
+                    }
+                    else if(map[curY][curX] == '1'){
+                        if(curNode.count < min){
+                            min = curNode.count;
+                        }
+                        visited[curY][curX][node.state] = true;
+                    }
+                    else{
+                        visited[curY][curX][node.state] = true;
+
+                    }
+                    queue.add(curNode);
+                }
+            }
+        }
+        return min;
+    }
+    public boolean isInBoundary(int x, int y){
+        return (0<=x && x < M && 0<=y && y < N && map[y][x] != '#');
+    }
+    public boolean hasKey(int mask, char gate){
+        char t = (char)(gate-'A');
+        return mask == (mask|(1 << t));
+    }
+}
+class Node{
+    Node(int x_, int y_, int count_, int state_){
+        x = x_;
+        y = y_;
+        count = count_;
+        state = state_;
+    }
+    int x;
+    int y;
+    int count;
+    int state;
 }
 
 public class Main {
     public static void main(String[] ars) throws IOException {
-        int N, K;
-        char[][] words = new char[51][51];
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken());
-        for (int i = 0; i < N; i++) {
-            String str = br.readLine();
-            str = str.substring(4, str.length() - 4);
-            words[i] = str.split("");
-        }
-        if (K < 5) {
-            System.out.println(0);
-            return;
-        }
-        Solution solution = new Solution(words, N, K);
-        System.out.println(solution.recur(0, 5));
+        Solution solution = new Solution();
+        System.out.println(solution.solution());
     }
 }
