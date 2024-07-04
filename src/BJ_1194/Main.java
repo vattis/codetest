@@ -47,48 +47,47 @@ class Solution {
                     if('A' <= map[curY][curX] && map[curY][curX] <= 'F'){ //문을 만났을 때
                         if(hasKey(node.state, map[curY][curX])){ //키를 갖고 있으면
                             visited[curY][curX][node.state] = true;
+                            queue.offer(curNode);
                         }
                     }
                     else if('a' <= map[curY][curX] && map[curY][curX] <= 'f'){ //열쇄를 만났을 때
-                        char t = (char)(map[curY][curX]-'a');
-                        curNode.state = (curNode.state|1<<t);
+                        int t = (map[curY][curX]-'a');
+                        curNode.state = (curNode.state|(1<<t));
                         visited[curY][curX][node.state] = true;
+                        queue.offer(curNode);
                     }
                     else if(map[curY][curX] == '1'){
-                        if(curNode.count < min){
-                            min = curNode.count;
-                        }
-                        visited[curY][curX][node.state] = true;
+                        return curNode.count;
                     }
                     else{
                         visited[curY][curX][node.state] = true;
-
+                        queue.offer(curNode);
                     }
-                    queue.add(curNode);
                 }
             }
         }
-        return min;
+        return -1;
     }
     public boolean isInBoundary(int x, int y){
         return (0<=x && x < M && 0<=y && y < N && map[y][x] != '#');
     }
     public boolean hasKey(int mask, char gate){
-        char t = (char)(gate-'A');
-        return mask == (mask|(1 << t));
+        int t = (gate - 'A');
+        return (mask & (1 << t)) > 0;
     }
 }
 class Node{
+    int x;
+    int y;
+    int count;
+    int state;
+
     Node(int x_, int y_, int count_, int state_){
         x = x_;
         y = y_;
         count = count_;
         state = state_;
     }
-    int x;
-    int y;
-    int count;
-    int state;
 }
 
 public class Main {
