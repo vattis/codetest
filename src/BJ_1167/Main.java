@@ -1,5 +1,6 @@
 package BJ_1167;
 
+import javax.management.BadAttributeValueExpException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +9,7 @@ import java.util.*;
 class Solution {
     int V;
     ArrayList<Node>[] graph;
-    boolean visited[];
+    boolean[] visited;
     int max = -1;
     int ansNode;
 
@@ -18,11 +19,14 @@ class Solution {
         graph = new ArrayList[V+2];
         visited = new boolean[V+2];
         Arrays.fill(visited, false);
+        graph[0] = new ArrayList<>();
+        for(int i = 0; i < V+1; i++){
+            graph[i] = new ArrayList<>();
+        }
         for(int i = 0; i < V; i++){
-            graph[i+1] = new ArrayList<>();
             StringTokenizer st = new StringTokenizer(br.readLine());
             int start = Integer.parseInt(st.nextToken());
-            while(st.hasMoreTokens()){
+            while(true){
                 int end = Integer.parseInt(st.nextToken());
                 if(end == -1){
                     break;
@@ -44,7 +48,9 @@ class Solution {
         }
         for(int i = 0; i < graph[curNode].size(); i++){
             Node nextNode = graph[curNode].get(i);
-            recur1(nextNode.endNode, length + nextNode.length);
+            if(!visited[nextNode.endNode]){
+                recur1(nextNode.endNode, length + nextNode.length);
+            }
         }
         return ansNode;
     }
@@ -52,6 +58,7 @@ class Solution {
         if(visited[curNode]){
             return -1;
         }
+
         visited[curNode] = true;
         if(max < length){
             max = length;
@@ -59,16 +66,19 @@ class Solution {
         }
         for(int i = 0; i < graph[curNode].size(); i++){
             Node nextNode = graph[curNode].get(i);
-            recur1(nextNode.endNode, length + nextNode.length);
+            if(!visited[nextNode.endNode]){
+                recur2(nextNode.endNode, length + nextNode.length);
+            }
         }
         return max;
     }
     public void solution(){
         int n1 = recur1(1, 0);
         Arrays.fill(visited, false);
+        max = -1;
+        ansNode = -1;
         System.out.println(recur2(n1, 0));
     }
-
 }
 class Node{
     Node(int s, int l){
