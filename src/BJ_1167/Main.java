@@ -5,7 +5,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-
+//트리는 순환 되는 구조가 될 수 없음
+//지름이 되는 두 노드(A, B) 중 하나는 다른 임의의 노드의 최장 거리의 노드가 됨
+//1에서 최장 거리가 되는 노드를 구하면 그 노드는 지름을 구성하는 노드가 된다
+//1에서 최강 거리가 되는 노드로부터 최장 거리를 구하면 그것은 트리의 지름이다
 class Solution {
     int V;
     ArrayList<Node>[] graph;
