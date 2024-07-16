@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-
+//우선 이 문제 상황을 그래프로 표현 할 생각을 못했음....
+//플로이드 와샬 알고리즘은 모든 노드에서 모든 노드까지 최소값을 찾는 알고리즘이지만
+//단순히 갈 수 있는지 계산하는 방식으로도 활용가능
+//솔직히 플로이드 와샬 알고리즘을 완전하게 이해하진 못했음(그냥 외우자) => 시간복잡도 = n^3
 class Solution {
     int n, k, s;
     boolean[][] arr;
