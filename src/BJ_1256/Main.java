@@ -26,12 +26,15 @@ class Solution{
         ans.append("z".repeat(Math.max(0, M)));
 
     }
+    /*
     String func(int start, int n, int m){
         ans.setCharAt(start, 'z');
         ans.setCharAt(start+1, 'a');
-        makeDefault()
+        //makeDefault();
         func(start+1, 1, m-1);
     }
+    */
+
     String makeDefault(int n, int m){
         String str = "";
         ans.append("a".repeat(Math.max(0, n)));
