@@ -1,5 +1,7 @@
 package BJ_1918;
-
+//시발 그냥 노가다 했고 ㅈㄴ 오래걸림
+//반례 찾기 노가다 밖에 안했음
+//풀이는 안봤는데 이렇게 푸는게 맞나??
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,73 +17,68 @@ class Solution {
     Queue<Character> numbers = new LinkedList<>();
     public Solution() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        char[] ss = br.readLine().toCharArray();
+        char[] arr = br.readLine().toCharArray();
         StringBuilder sb = new StringBuilder("");
-        int index = 0;
-        while(index < ss.length){
-            char s = ss[index];
-            if(s == '+' || s =='-'){
-                if(!operators.isEmpty()){
-                    if(operators.peek() == '+' || operators.peek() == '-'){
-                        char s2 = operators.pop();
-                        while(s2 != '('){
-                            sb.append(s2);
-                            s2 = operators.pop();
-                            System.out.println(sb);
+        for(int index = 0; index < arr.length; index++) {
+            char currentChar = arr[index];
+            if(currentChar == '+' || currentChar == '-') {
+                while (!operators.isEmpty() && operators.peek() != '(') {
+                    while (!numbers.isEmpty()) {
+                        sb.append(numbers.poll());
+                    }
+                    sb.append(operators.pop());
+                }
+                operators.push(currentChar);
+            }
+            else if(currentChar == '*' || currentChar == '/') {
+                if(arr[index+1] == '('){
+                    operators.push(currentChar);
+                }else{
+                    numbers.add(arr[++index]);
+                    if(!operators.isEmpty()){
+                        //while(operators.peek() != '('){
+                            if((operators.peek() == '*' || operators.peek() == '/')){
+                                sb.append(operators.pop());
+                            }
+                            while (!numbers.isEmpty()) {
+                                sb.append(numbers.poll());
+                            }
+
+                        //}
+                    }else{
+                        while (!numbers.isEmpty()) {
+                            sb.append(numbers.poll());
                         }
                     }
+                    sb.append(currentChar);
                 }
-                operators.add(s);
             }
-            else if(s == '('){
-                operators.add(s);
-                while(!numbers.isEmpty()){
+            else if(currentChar == '(') {
+                while (!numbers.isEmpty()) {
                     sb.append(numbers.poll());
                 }
+                operators.push(currentChar);
             }
-            else if(s == ')'){
-                while(!numbers.isEmpty()){
-                    sb.append(numbers.poll());
-                    System.out.println(sb);
-                }
-                char s2 = ' ';
-                while(s2 != '('){
-                    s2 = operators.pop();
-                    if(s2 != '(' && s2 !=')'){sb.append(s2);}
-                    System.out.println(sb);
-                }
-            }
-            else if(s == '*' || s == '/'){
-                if(ss[index+1] == '('){
-                    operators.add(s);
-                }
-                else{
-                    operators.add('(');
-                    operators.add(s);
-                    while(numbers.size() > 1){
+            else if(currentChar == ')') {
+                while(operators.peek() != '('){
+                    while (!numbers.isEmpty()) {
                         sb.append(numbers.poll());
-                        System.out.println(sb);
                     }
-                    numbers.add(ss[++index]);
-                    while(!numbers.isEmpty()){
-                        sb.append(numbers.poll());
-                        System.out.println(sb);
-                    }
-                    char s2 = ' ';
-                    while(s2 != '('){
-                        s2 = operators.pop();
-                        if(s2 != '(' && s2 !=')'){sb.append(s2);}
-                        System.out.println(sb);
-                    }
+                    sb.append(operators.pop());
                 }
+                operators.pop();
             }
             else{
-                numbers.add(s);
+                numbers.add(currentChar);
             }
-            index++;
         }
-
-        System.out.println(sb);
+        while(!numbers.isEmpty()) {
+            sb.append(numbers.poll());
+        }
+        while(!operators.isEmpty()){
+            sb.append(operators.pop());
+        }
+        System.out.println(new String(sb));
     }
 }
 
