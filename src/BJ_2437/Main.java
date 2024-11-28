@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 import static java.lang.Math.min;
 import static java.lang.Math.pow;
 
-class Solution {
+class Solution {    
    int N;
    Long[] arr;
    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
