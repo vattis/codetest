@@ -8,45 +8,49 @@ package BJ_7579;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-dasdasdad
+
 class Solution {
     int N, M;
-    Map<Integer, Integer> n = new HashMap<>();
-    int[] m = new int[500001];
-    StringBuilder ans = new StringBuilder();
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    Pro[] arr;
     public Solution() throws IOException {
-        N = Integer.parseInt(br.readLine());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        for(int i = 0; i < N; i++) {
-            int t = Integer.parseInt(st.nextToken());
-            if(n.containsKey(t)){
-                n.replace(t, n.get(t)+1);
-            }else{
-                n.put(t, 1);
-            }
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        arr = new Pro[N];
+        for(int i = 0; i < N; i++){
+            arr[i] = new Pro();
         }
-        M = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
-        for(int i = 0; i < M; i++) {
-            m[i] = Integer.parseInt(st.nextToken());
+        for(int i = 0; i < N; i++){
+            arr[i].setMem(Integer.parseInt(st.nextToken()));
         }
-        for(int i = 0; i < M; i++){
-            if(n.containsKey(m[i])){
-                ans.append(n.get(m[i])+" ");
-            }
-            else{
-                ans.append(0 + " ");
-            }
+        st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < N; i++){
+            arr[i].setCost(Integer.parseInt(st.nextToken()));
         }
-        System.out.println(ans);
+        Arrays.sort(arr);
     }
 }
+class Pro implements Comparable<Pro>{
+    int cost, mem;
+    public void setCost(int cost){
+        this.cost = cost;
+    }
+    public void setMem(int mem){
+        this.mem = mem;
+    }
 
+
+    @Override
+    public int compareTo(Pro o) {
+        return this.mem - o.mem;
+    }
+}
 public class Main {
     public static void main(String[] ars) throws IOException {
         Solution sol = new Solution();
