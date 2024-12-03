@@ -33,7 +33,7 @@ class Solution{
         return min;
     }
     public Solution() throws IOException {
-        int ans = 0;
+        long ans = 0;
         N = Integer.parseInt(br.readLine());
         A = new int[N+1];
         B = new int[N+1];
@@ -62,41 +62,24 @@ class Solution{
         }
         Arrays.sort(AB);
         Arrays.sort(CD);
-
         int ab_index = 0;
-        int cd_index = 0;
-        while(ab_index != N*N-1 && cd_index != N*N-1){
-            System.out.println("AB: " + AB[ab_index] + " CD: " + CD[cd_index]);
-            if(AB[ab_index] + CD[cd_index] == 0){
-                ans++;
-                if((AB[ab_index+1]-AB[ab_index]) < (CD[cd_index+1]-CD[cd_index])){
-                    ab_index++;
-                }
-                else{
-                    cd_index++;
-                }
-            }
-            else if(Math.abs(AB[ab_index+1] + CD[cd_index]) < Math.abs(AB[ab_index]+CD[cd_index+1])){
+        int cd_index = N*N-1;
+        while(ab_index < N*N && cd_index >= 0){
+            if(AB[ab_index] + CD[cd_index] < 0){
                 ab_index++;
-            }
-            else{
-                cd_index++;
-            }
-        }
-
-        if(ab_index == N*N-1){
-            while(cd_index != N*N-1){
-                if(CD[cd_index] + AB[ab_index] == 0){
-                    ans++;
+            }else if(AB[ab_index] + CD[cd_index] > 0){
+                cd_index--;
+            }else{
+                long leftCount = 1, rightCount = 1;
+                while (ab_index + 1 < N*N && (AB[ab_index] == AB[ab_index +1])) {
+                    leftCount++;
+                    ab_index ++;
                 }
-                cd_index++;
-            }
-        }else if(cd_index == N*N-1){
-            while(ab_index != N*N-1){
-                System.out.println("AB: " + AB[ab_index] + " CD: " + CD[cd_index]);
-                if(AB[ab_index] + CD[cd_index] == 0){
-                    ans++;
+                while (cd_index > 0 && (CD[cd_index] == CD[cd_index-1])) {
+                    rightCount++;
+                    cd_index--;
                 }
+                ans += leftCount * rightCount;
                 ab_index++;
             }
         }
