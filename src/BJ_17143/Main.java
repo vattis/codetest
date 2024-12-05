@@ -20,8 +20,8 @@ class Solution {
 
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        arr = new int[R+3][C+1];
-        for(int i = 0; i < R+3; i++) {
+        arr = new int[R+1][C+3];
+        for(int i = 0; i < R+1; i++) {
             Arrays.fill(arr[i], -1);
         }
         M = Integer.parseInt(st.nextToken());
@@ -50,13 +50,13 @@ class Solution {
         switch(shark.direction){
             case 1: //위
                 arr[shark.r][shark.c] = -1;
-                int cycle1 = shark.speed / (C-1);
-                int rem1 = shark.speed % (C-1);
-                if(shark.c-rem1 < 1){
+                int cycle1 = shark.speed / (R-1);
+                int rem1 = shark.speed % (R-1);
+                if(shark.r-rem1 < 1){
                     cycle1++;
-                    shark.c = rem1-shark.c;
+                    shark.r = rem1-shark.r+2;
                 }else{
-                    shark.c -= rem1;
+                    shark.r -= rem1;
                 }
                 if(cycle1 % 2 != 0){
                     shark.direction = 2;
@@ -64,13 +64,14 @@ class Solution {
                 break;
             case 2: //아래
                 arr[shark.r][shark.c] = -1;
-                int cycle2 = shark.speed / (C-1);
-                int rem2 = shark.speed % (C-1);
-                if(shark.c+rem2 > C){
+                int length = shark.r+shark.speed;
+                int cycle2 = shark.speed / (R-1);
+                int rem2 = shark.speed % (R-1);
+                if(shark.r+rem2 > R){
                     cycle2++;
-                    shark.c = 2*C-(shark.c+rem2);
+                    shark.r = 2*R-(shark.r+rem2);
                 }else{
-                    shark.c += rem2;
+                    shark.r += rem2;
                 }
                 if(cycle2 % 2 != 0){
                     shark.direction = 1;
@@ -78,13 +79,13 @@ class Solution {
                 break;
             case 3: //오른쪽
                 arr[shark.r][shark.c] = -1;
-                int cycle3 = shark.speed / (R-1);
-                int rem3 = shark.speed % (R-1);
-                if(shark.r-rem3 > R){
+                int cycle3 = shark.speed / (C-1);
+                int rem3 = shark.speed % (C-1);
+                if(shark.c-rem3 > C){
                     cycle3++;
-                    shark.r = 2*R-(shark.r+rem3);
+                    shark.c = 2*C-(shark.c+rem3);
                 }else{
-                    shark.r += rem3;
+                    shark.c += rem3;
                 }
                 if(cycle3 % 2 != 0){
                     shark.direction = 4;
@@ -92,13 +93,13 @@ class Solution {
                 break;
             case 4: //왼쪽
                 arr[shark.r][shark.c] = -1;
-                int cycle4 = shark.speed / (R-1);
-                int rem4 = shark.speed % (R-1);
-                if(shark.r-rem4 < 1){
+                int cycle4 = shark.speed / (C-1);
+                int rem4 = shark.speed % (C-1);
+                if(shark.c-rem4 < 1){
                     cycle4++;
-                    shark.r = rem4-shark.r;
+                    shark.c = rem4-shark.c+2;
                 }else{
-                    shark.r-=rem4;
+                    shark.c-=rem4;
                 }
                 if(cycle4 % 2 != 0){
                     shark.direction = 3;
@@ -119,12 +120,12 @@ class Solution {
         System.out.println(index + "번 상어) 방향: " + shark.direction + " (" + shark.r + ", " + shark.c + ")");
     }
     public void humanAction(int i){
-        for(int j = 1; j <= C; j++){
-            if(arr[i][j] != -1){
-                int sharkIndex = arr[i][j];
+        for(int j = 1; j <= R; j++){
+            if(arr[j][i] != -1){
+                int sharkIndex = arr[j][i];
                 System.out.println("잡아먹힌 상어: "+sharkIndex);
                 ans += sharks[sharkIndex].size;
-                arr[i][j] = -1;
+                arr[j][i] = -1;
                 break;
             }
         }
