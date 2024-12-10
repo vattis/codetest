@@ -1,5 +1,6 @@
 package BJ_2467;
-
+// 걍 방법도 바로 알 수 있었음
+//이진탐색을 나 혼자 만들걸 괜히 블로그꺼 퍼와서 오래걸림
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,11 +20,11 @@ class Solution {
        }
        int a, b;
        int ans1 = 0, ans2 = 0;
-       int min = 1000000000;
+       int min = 2000000001;
        for(int i = 0; i < N; i++){;
            a = i;
            b = binarySearch(-arr[a], 0, N-1);
-          System.out.println("a = " + a + " b = " + b);
+          //System.out.println("a = " + a + " b = " + b);
            if(a == b){
                if(a == 0){
                    b = 1;
@@ -37,7 +38,7 @@ class Solution {
                    }
                }
            }
-           System.out.println("####a = " + a + " b = " + b);;
+           //System.out.println("####a = " + a + " b = " + b);;
            int t = Math.abs(arr[a] + arr[b]);
            if(t < min){
                min = t;
@@ -56,7 +57,7 @@ class Solution {
        int mid = 0;
        int ans = -1;
        while(start <= end){
-           System.out.println("target" + target + " start" + start + " end" + end);
+           //System.out.println("target" + target + " start" + start + " end" + end);
             mid = (start + end) / 2;
             if(arr[mid] < target){
                 start = mid + 1;
