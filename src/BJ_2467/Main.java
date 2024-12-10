@@ -1,7 +1,5 @@
 package BJ_2467;
 
-
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,25 +17,95 @@ class Solution {
        for (int i = 0; i < N; i++) {
            arr[i] = Integer.parseInt(st.nextToken());
        }
+       int a, b;
+       int ans1 = 0, ans2 = 0;
+       int min = 1000000000;
+       for(int i = 0; i < N; i++){;
+           a = i;
+           b = binarySearch(-arr[a], 0, N-1);
+          System.out.println("a = " + a + " b = " + b);
+           if(a == b){
+               if(a == 0){
+                   b = 1;
+               }else if(a == N-1){
+                   b = N-2;
+               }else{
+                   if(Math.abs(arr[a] + arr[a-1]) < Math.abs(arr[a] + arr[a+1])){
+                       b = a-1;
+                   }else{
+                       b = a+1;
+                   }
+               }
+           }
+           System.out.println("####a = " + a + " b = " + b);;
+           int t = Math.abs(arr[a] + arr[b]);
+           if(t < min){
+               min = t;
+               ans1 = arr[a];
+               ans2 = arr[b];
+           }
+       }
+       if(ans1 < ans2){
+            System.out.println(ans1 + " " + ans2);
+       }
+       else{
+           System.out.println(ans2 + " " + ans1);
+       }
    }
-   int binarySearch(int target, int start, int end){
+   int binarySearch(int target, int start, int end){;
        int mid = 0;
        int ans = -1;
        while(start <= end){
+           System.out.println("target" + target + " start" + start + " end" + end);
             mid = (start + end) / 2;
             if(arr[mid] < target){
                 start = mid + 1;
+                if(start == N){
+                    return N-1;
+                }
             }else if(arr[mid] > target){
                 end = mid - 1;
+                if(end == -1){
+                    return 0;
+                }
             }else{
-                ans = mid;
-                return ans;
+                return mid;
             }
         }
-
-       int l = Math.abs(target - arr[start]);
-       int h = Math.abs(target - arr[end]);
-       return l < h ? arr[start] : arr[end];
+       if(mid == 0){
+           int m1 = Math.abs(target - arr[mid]);
+           int m2 = Math.abs(target - arr[mid+1]);
+           if(m1 < m2){
+               return mid;
+           }else{
+               return mid + 1;
+           }
+       }else if(mid == N-1){
+           int m1 = Math.abs(target - arr[mid]);
+           int m2 = Math.abs(target - arr[mid-1]);
+           if(m1 < m2){
+               return mid;
+           }else{
+               return mid - 1;
+           }
+       }else{
+           int m1 = Math.abs(target - arr[mid]);
+           int m2 = Math.abs(target - arr[mid+1]);
+           int m3 = Math.abs(target - arr[mid-1]);
+           if(m1 <= m2){
+               if(m1 <= m3){
+                   return mid;
+               }else{
+                   return mid-1;
+               }
+           }else{
+               if(m2 <= m3){
+                   return mid+1;
+               }else{
+                    return mid-1;
+               }
+           }
+       }
    }
 }
 
@@ -46,4 +114,3 @@ public class Main {
         Solution solution = new Solution();
     }
 }
-
