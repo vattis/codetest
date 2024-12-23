@@ -1,61 +1,56 @@
 package BJ_11049;
-//딱봐도 DP 사용해서 시간 줄이는 문제
-//문제는 DP를 어떻게 사용하느냐
-//그냥 2차 배열 DP를 만들어서 DP[시작][끝] = 팰린드롬 여부
+//집중하니까 금방 풀었음
+//처음 방식으로 시간 초과가 났을 때 DP 밖에 방법이 없다는 걸 알았음
+//괜히 풀어서 생각하지 말고 문제에서 알려준 대로 행렬로 생각하니까 쉬움
+//DP+재귀 문제 ㅇㅇ
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 class Solution {
     int N;
-    int[] arr = new int[503];
+    Pair[] arr = new Pair[501];
+    int[][] DP = new int[501][501];
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     public Solution() throws IOException {
         N = Integer.parseInt(br.readLine());
-        if(N == 1){
-            System.out.println(0);
-        }
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        arr[0] = Integer.parseInt(st.nextToken());
-        arr[1] = Integer.parseInt(st.nextToken());
-        for(int i = 2; i <= N; i++){
+        StringTokenizer st;
+        for(int i = 0; i < N; i++){
             st = new StringTokenizer(br.readLine());
-            st.nextToken();
-            arr[i] = Integer.parseInt(st.nextToken());
+            int r = Integer.parseInt(st.nextToken());
+            int c = Integer.parseInt(st.nextToken());
+            arr[i] = new Pair(r, c);
         }
-        System.out.println(recur(arr, 0));
+        for(int i = 0; i < 501; i++){
+            Arrays.fill(DP[i], Integer.MAX_VALUE);
+        }
+        System.out.println(recur(0, N-1));
     }
-    public int recur(int[] arr, int count){
-        int min = 2000000000;
-        if(count == N-2){
-            int ans = 1;
-            for(int i = 0; i <= N; i++){
-                //System.out.print(arr[i] + " ");
-                ans *= arr[i];
-            }
-            return Math.abs(ans);
+    public int recur(int start, int end){
+        //System.out.print("start : " + start + " end: " + end);
+        //System.out.println();
+        if(DP[start][end] != Integer.MAX_VALUE){
+            return DP[start][end];
         }
-        for(int i = 1; i <= N-1; i++){
-            if(arr[i] == -1){
-                continue;
-            }
-            int[] temp = arr.clone();
-            temp[i] = -1;
-            int s = i-1, e = i+1;
-            while(arr[s] == -1){
-                s--;
-            }
-            while(arr[e] == -1){
-                e++;
-            }
-            int t = recur(temp, count+1) + arr[i]*arr[s]*arr[e];
-            //System.out.println(t);
-            if(min > t){
-                min = t;
+        int min = Integer.MAX_VALUE;
+        if(start == end){return 0;}
+        for(int i = start; i < end; i++){
+            int temp = recur(start, i) + recur(i+1, end) + arr[start].r * arr[end].c * arr[i].c;
+            if(temp < min){
+                min = temp;
             }
         }
+        DP[start][end] = min;
         return min;
+    }
+}
+class Pair{
+    int r, c;
+    public Pair(int r_, int c_){
+        r = r_;
+        c = c_;
     }
 }
 
