@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 class Solution {
     int N;
+    int Max = 0;
     boolean[][] arr;
 
     Solution() throws IOException {
@@ -28,7 +29,55 @@ class Solution {
                 }
             }
         }
-
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                if(arr[i][j]){
+                    recur(arr, 0, i, j);
+                    System.out.println(Max);
+                    return;
+                }
+            }
+        }
+    }
+    private int recur(boolean[][] arr, int cnt, int i, int j){
+        System.out.println("i: " + i + ", j: " + j);
+        if(j >= N){
+            return cnt;
+        }
+        if(Max < cnt){
+            Max = cnt;
+        }
+        if(arr[i][j]){
+            boolean[][] a = arr.clone();
+            a[i][j] = false;
+            int z = i, x = j;
+            while(z < N && x < N){
+                a[z++][x++] = false;
+            }
+            z = i; x = j;
+            while(z < N && x >= 0){
+                a[z++][x--] = false;
+            }
+            z = i; x = j;
+            while(z >= 0 && x < N){
+                a[z--][x++] = false;
+            }
+            z = i; x = j;
+            while(z >= 0 && x >= 0){
+                a[z--][x--] = false;
+            }
+            if(i >= N-1){
+                recur(a, cnt+1, 0, j+1);
+            }else{
+                recur(a, cnt+1, i+1, j);
+            }
+        }
+        if(i >= N-1){
+            recur(arr, cnt, 0, j+1);
+        }else{
+            recur(arr, cnt, i+1, j);
+        }
+        return cnt;
     }
 }
 
